@@ -45,7 +45,7 @@ def add_line_numbers(content, number_nonblank_lines_only=False):
     for line in content:
         stripped_line = line.strip("\n")
 
-        # if line is empty and empty lines should not be numbered
+        # if line is empty (newline counts as 1 character) and empty lines should not be numbered
         if len(line) == 1 and number_nonblank_lines_only:
             updated_content.append(stripped_line)
         else:
@@ -54,9 +54,11 @@ def add_line_numbers(content, number_nonblank_lines_only=False):
 
     return updated_content
 
+
 def print_lines(content):
     for line in content:
         print(line.strip("\n"))
+
 
 def print_ends(content):
     updated_content = []
