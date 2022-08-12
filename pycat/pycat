@@ -21,30 +21,42 @@ parser.add_argument(
     default=False,
     help="display $ at end of each line",
 )
+parser.add_argument(
+    "--number-nonblank",
+    "-b",
+    action="store_const",
+    const=True,
+    default=False,
+    help="number nonempty output lines",
+)
 
 args = parser.parse_args()
 files = args.files
 print_line_numbers = args.number
 show_ends = args.show_ends
+number_nonblank_lines_only = args.number_nonblank
 
 
-def add_line_numbers(content):
+def add_line_numbers(content, number_nonblank_lines_only=False):
     count = 0
     updated_content = []
 
     # TODO (mg): use list-comprehension
     for line in content:
-        count += 1
         stripped_line = line.strip("\n")
-        updated_content.append(f"{count}\t{stripped_line}")
+
+        # if line is empty and empty lines should not be numbered
+        if len(line) == 1 and number_nonblank_lines_only:
+            updated_content.append(stripped_line)
+        else:
+            count += 1
+            updated_content.append(f"{count : >6} {stripped_line}")
 
     return updated_content
-
 
 def print_lines(content):
     for line in content:
         print(line.strip("\n"))
-
 
 def print_ends(content):
     updated_content = []
@@ -59,8 +71,10 @@ def print_ends(content):
 if __name__ == "__main__":
     for file in files:
         with open(file, "r") as f:
-            if print_line_numbers:
-                f = add_line_numbers(f)
+
+            if print_line_numbers or number_nonblank_lines_only:
+                f = add_line_numbers(f, number_nonblank_lines_only)
+
             if show_ends:
                 f = print_ends(f)
             print_lines(f)
