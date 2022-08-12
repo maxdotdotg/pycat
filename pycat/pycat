@@ -19,14 +19,18 @@ files = args.files
 print_line_numbers = args.number
 
 
+# gods this is getting messy
 def print_files(files):
     for file in files:
         with open(file, "r") as f:
+
+            # check for printing line numbers
             if print_line_numbers:
                 count = 0
                 for line in f:
                     count += 1
-                    print(f"{count}\t{line.strip()}")
+                    stripped_line = line.strip("\n")
+                    print(f"{count}\t{stripped_line}")
             else:
                 print(f.read())
 
