@@ -2,15 +2,27 @@
 
 import argparse
 
-
-parser = argparse.ArgumentParser(description='print some files to stdout')
-parser.add_argument('file', nargs='+', help='files to cat')
+parser = argparse.ArgumentParser(description="print some files to stdout")
+parser.add_argument("files", nargs="+", help="files to cat")
+parser.add_argument(
+        "--number", "-n", action="store_const", const=True, default=False, help="print line numbers"
+)
 
 args = parser.parse_args()
+files = args.files
+print_line_numbers = args.number
 
-print(args.file)
 
-for file in args.file:
-    with open(file, "r") as f:
-        print(f.read())
+def print_files(files):
+    for file in files:
+        with open(file, "r") as f:
+            if print_line_numbers:
+                count = 0
+                for line in f:
+                    count += 1
+                    print(f"{count}\t{line.strip()}")
+            else:
+                print(f.read())
 
+
+print_files(files)
