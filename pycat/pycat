@@ -37,6 +37,12 @@ parser.add_argument(
     default=False,
     help="suppress repeated empty output lines",
 )
+parser.add_argument("--show-tabs", "-T",
+    action="store_const",
+    const=True,
+    default=False,
+    help="display TAB characters as ^I",
+)
 
 args = parser.parse_args()
 files = args.files
@@ -44,6 +50,7 @@ print_line_numbers = args.number
 show_ends = args.show_ends
 number_nonblank_lines_only = args.number_nonblank
 squeeze_blank_lines = args.squeeze_blank
+show_tabs = args.show_tabs
 
 
 def add_line_numbers(content, number_nonblank_lines_only=False):
@@ -103,12 +110,24 @@ def squeeze_down_blank_lines(content):
 
     return updated_content
 
+def replace_tabs(content):
+    updated_content = []
+    for line in content:
+        if "\t" in line:
+            line = line.replace("\t", "^I")
+            updated_content.append(line)
+        else:
+            updated_content.append(line)
+
+    return updated_content
 
 if __name__ == "__main__":
     for file in files:
         with open(file, "r") as f:
             if squeeze_blank_lines:
                 f = squeeze_down_blank_lines(f)
+            if show_tabs:
+                f = replace_tabs(f)
 
             if print_line_numbers or number_nonblank_lines_only:
                 f = add_line_numbers(f, number_nonblank_lines_only)
