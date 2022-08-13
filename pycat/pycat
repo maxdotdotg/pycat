@@ -37,7 +37,9 @@ parser.add_argument(
     default=False,
     help="suppress repeated empty output lines",
 )
-parser.add_argument("--show-tabs", "-T",
+parser.add_argument(
+    "--show-tabs",
+    "-T",
     action="store_const",
     const=True,
     default=False,
@@ -110,6 +112,7 @@ def squeeze_down_blank_lines(content):
 
     return updated_content
 
+
 def replace_tabs(content):
     updated_content = []
     for line in content:
@@ -120,6 +123,7 @@ def replace_tabs(content):
             updated_content.append(line)
 
     return updated_content
+
 
 if __name__ == "__main__":
     for file in files:
